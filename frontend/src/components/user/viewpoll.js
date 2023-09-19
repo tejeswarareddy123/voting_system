@@ -1,11 +1,16 @@
-// src/components/PollList.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './viewpoll.css';
+import { useLocation } from 'react-router-dom';
 
 const PollList = () => {
   const [polls, setPolls] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({});
+  const [submittedPolls, setSubmittedPolls] = useState([]); // To track submitted polls
+
+  const location = useLocation();
+  const user = location.state.user;
+  console.log("userdata", user);
 
   useEffect(() => {
     // Fetch the list of polls from your server
@@ -28,6 +33,38 @@ const PollList = () => {
       ...selectedOptions,
       [pollId]: optionIndex,
     });
+  };
+
+  const handleSubmit = async () => {
+    // Create an array to store submitted poll data
+    const submittedData = [];
+
+    // Iterate through selected options and build the submitted data
+    for (const pollId in selectedOptions) {
+      if (selectedOptions.hasOwnProperty(pollId)) {
+        submittedData.push({
+          userId: user.id, // Assuming you have a user ID in the user object
+          pollId: parseInt(pollId),
+          selectedOptionIndex: selectedOptions[pollId],
+        });
+      }
+    }
+
+    try {
+      // Send a POST request to your server to save the submitted data
+      const response = await axios.post('http://localhost:3001/submitPolls', submittedData);
+      if (response.status === 201) {
+        // Clear selected options when successfully submitted
+        setSelectedOptions({});
+        // Add the submitted polls to the tracking list
+        setSubmittedPolls(submittedData);
+        console.log('Polls submitted successfully:', submittedData);
+      } else {
+        console.error('Failed to submit polls:', response.data);
+      }
+    } catch (error) {
+      console.error('Error submitting polls:', error);
+    }
   };
 
   return (
@@ -57,6 +94,8 @@ const PollList = () => {
           )}
         </div>
       ))}
+
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 };

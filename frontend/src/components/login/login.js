@@ -35,13 +35,13 @@ function Login() {
         body: JSON.stringify(signupDetails)
       };
 
-      fetch("http://localhost:8000/signin", options)
+      fetch("http://localhost:3001/signin", options)
         .then(async (res) => {
           if (res.status === 201) {
             const user = await res.json();
             console.log(user);
             toast.success("Login Successful");
-            navigate("/dashboard", { state: { user } });
+            navigate("/pollList", { state: { user } });
           } else if (res.status === 404) {
             toast.warning("Invalid Username or Password");
           }
