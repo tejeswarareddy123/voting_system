@@ -114,9 +114,11 @@ app.get('/polls', (req, res) => {
   }
 });
 
+
+
 app.post('/submitPolls', (req, res) => {
   const submittedPolls = req.body;
-
+  console.log(submittedPolls)
   // Ensure submittedPolls is an array
   if (!Array.isArray(submittedPolls)) {
     return res.status(400).json({ error: 'Invalid data format' });
@@ -126,7 +128,7 @@ app.post('/submitPolls', (req, res) => {
   const values = submittedPolls.map((poll) => [poll.userId, poll.pollId, poll.selectedOptionIndex]);
   
   db.query(
-    'INSERT INTO submitted_polls (userId, pollId, selectedOptionIndex) VALUES ?',
+    'INSERT INTO submitted_polls (user_id, poll_id, selected_option_index) VALUES ?',
     [values],
     (insertErr) => {
       if (insertErr) {
@@ -139,6 +141,26 @@ app.post('/submitPolls', (req, res) => {
   );
 });
 
+app.get('/pollResults/:pollId', (req, res) => {
+  console.log("req",req.params)
+  const pollId = req.params.pollId;
+  console.log("pollid",pollId)
+  // Query the database to get poll results
+  db.query(
+    'SELECT selected_option_index, COUNT(*) as voteCount FROM submitted_polls WHERE poll_id = ? GROUP BY selected_option_index',
+    [pollId],
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching poll results:', err);
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+      }
+
+      console.log("resi",results)
+      res.status(200).json(results);
+    }
+  );
+});
 
 
 // Start the server

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './viewpoll.css';
 import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const PollList = () => {
   const [polls, setPolls] = useState([]);
@@ -10,18 +11,23 @@ const PollList = () => {
 
   const location = useLocation();
   const user = location.state.user;
-  console.log("userdata", user);
 
   useEffect(() => {
     // Fetch the list of polls from your server
     axios.get('http://localhost:3001/polls')
       .then((response) => {
-        // Parse the 'options' string into an array for each poll
-        const parsedPolls = response.data.map((poll) => ({
-          ...poll,
-          options: JSON.parse(poll.options),
-        }));
-        setPolls(parsedPolls);
+        // Ensure that the response data is an array
+        if (Array.isArray(response.data)) {
+          // Parse the 'options' string into an array for each poll
+          const parsedPolls = response.data.map((poll) => ({
+            id: poll.poll_id, // Use 'poll_id' as 'id'
+            question: poll.question,
+            options: JSON.parse(poll.options),
+          }));
+          setPolls(parsedPolls);
+        } else {
+          console.error('Invalid poll data format:', response.data);
+        }
       })
       .catch((error) => {
         console.error('Error fetching polls:', error);
@@ -33,6 +39,7 @@ const PollList = () => {
       ...selectedOptions,
       [pollId]: optionIndex,
     });
+    console.log('Selected Options:', selectedOptions);
   };
 
   const handleSubmit = async () => {
@@ -49,6 +56,7 @@ const PollList = () => {
         });
       }
     }
+
 
     try {
       // Send a POST request to your server to save the submitted data
@@ -92,6 +100,7 @@ const PollList = () => {
           {selectedOptions[poll.id] !== undefined && (
             <p>Your Answer: {poll.options[selectedOptions[poll.id]]}</p>
           )}
+          <Link to={`/poll`}>View Results</Link>
         </div>
       ))}
 
