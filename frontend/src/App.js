@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import CreatePoll from './components/admin/createpoll';
+import CreatePoll from './components/user/createpoll';
 import PollList from './components/user/viewpoll'
 import Login from './components/login/login';
 import { BrowserRouter as Router,Routes, Route } from "react-router-dom";
@@ -14,7 +14,7 @@ function App() {
         
             <Route path="/" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/poll" element={<PollResults />} />
+            <Route path="/pollResults/:pollId" element={<PollResults/>} />
             <Route path="/createpoll" element={<CreatePoll />} />
             <Route path="/pollList" element={<PollList />} />
         </Routes>

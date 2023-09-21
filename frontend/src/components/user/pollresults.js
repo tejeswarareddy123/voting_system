@@ -6,8 +6,9 @@ import './pollresults.css'; // Import a CSS file for styling
 const PollResults = () => {
   const [pollDetails, setPollDetails] = useState({});
   const [results, setResults] = useState([]);
-  const pollId=1;
-
+  const { pollId } = useParams();
+  console.log(pollId)
+  
   const getVoteCountForOption = (optionIndex) => {
     const result = results.find((item) => item.selected_option_index === optionIndex);
     return result ? result.voteCount : 0;
@@ -16,14 +17,18 @@ const PollResults = () => {
   useEffect(() => {
     console.log('Fetching poll details...');
     axios
-      .get(`http://localhost:3001/polls`)
+      .get(`http://localhost:3001/polls/${pollId}`)
       .then((response) => {
         console.log('Fetched poll details:', response.data);
-        const pollData = response.data[0];
+        const pollData = response.data;
+      if (pollData && pollData.options) {
         // Parse the options field as JSON
-        pollData.options = JSON.parse(pollData.options);
+        // pollData.options = JSON.parse(pollData.options);
         setPollDetails(pollData); // Set the poll details state
-      })
+      } else {
+        console.error('Invalid poll data format:', pollData);
+      }
+    })
       .catch((error) => {
         console.error('Error fetching poll details:', error);
       });

@@ -7,24 +7,29 @@ import { Link } from 'react-router-dom';
 const PollList = () => {
   const [polls, setPolls] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({});
-  const [submittedPolls, setSubmittedPolls] = useState([]); // To track submitted polls
+  const [userSubmittedPolls, setUserSubmittedPolls] = useState([]); // Track submitted polls by the user
 
   const location = useLocation();
   const user = location.state.user;
-
-  useEffect(() => {
+  console.log("userdetails",user)
+    useEffect(() => {
     // Fetch the list of polls from your server
     axios.get('http://localhost:3001/polls')
       .then((response) => {
-        // Ensure that the response data is an array
+        console.log('Polls response:', response.data);
         if (Array.isArray(response.data)) {
-          // Parse the 'options' string into an array for each poll
           const parsedPolls = response.data.map((poll) => ({
-            id: poll.poll_id, // Use 'poll_id' as 'id'
+            id: poll.poll_id,
             question: poll.question,
             options: JSON.parse(poll.options),
           }));
           setPolls(parsedPolls);
+          // Initialize selectedOptions state for all polls
+          const initialSelectedOptions = {};
+          parsedPolls.forEach((poll) => {
+            initialSelectedOptions[poll.id] = undefined;
+          });
+          setSelectedOptions(initialSelectedOptions);
         } else {
           console.error('Invalid poll data format:', response.data);
         }
@@ -32,46 +37,68 @@ const PollList = () => {
       .catch((error) => {
         console.error('Error fetching polls:', error);
       });
-  }, []);
+
+    // Fetch the user's submitted polls from the server
+    axios.get(`http://localhost:3001/user/${user.id}/submittedPolls`)
+      .then((response) => {
+        console.log('Submitted polls response:', response.data);
+        if (Array.isArray(response.data)) {
+          // Update the userSubmittedPolls state with the submitted poll IDs
+          const submittedPollIds = response.data.map((submittedPoll) => submittedPoll.poll_id);
+          setUserSubmittedPolls(submittedPollIds);
+        } else {
+          console.error('Invalid submitted poll data format:', response.data);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching submitted polls:', error);
+      });
+  }, [user.id]);
 
   const handleOptionChange = (pollId, optionIndex) => {
+    // Check if the user has already submitted this poll
+    if (userSubmittedPolls.includes(pollId)) {
+      return; // Do not allow changing options for submitted polls
+    }
+
     setSelectedOptions({
       ...selectedOptions,
       [pollId]: optionIndex,
     });
-    console.log('Selected Options:', selectedOptions);
   };
 
-  const handleSubmit = async () => {
-    // Create an array to store submitted poll data
-    const submittedData = [];
-
-    // Iterate through selected options and build the submitted data
-    for (const pollId in selectedOptions) {
-      if (selectedOptions.hasOwnProperty(pollId)) {
-        submittedData.push({
-          userId: user.id, // Assuming you have a user ID in the user object
-          pollId: parseInt(pollId),
-          selectedOptionIndex: selectedOptions[pollId],
-        });
-      }
+  const handleSubmit = async (pollId) => { // Add pollId as an argument
+    console.log('Submitting poll for pollId:', pollId);
+    if (selectedOptions[pollId] === undefined) {
+      return; // No option selected, do not submit
     }
 
+    // Create an array to store submitted poll data
+    const submittedData = {
+      userId: user.id,
+      pollId: pollId, // Use the passed pollId
+      selectedOptionIndex: selectedOptions[pollId],
+    };
 
     try {
       // Send a POST request to your server to save the submitted data
+      console.log("sybmitting data",submittedData)
       const response = await axios.post('http://localhost:3001/submitPolls', submittedData);
+      console.log('Response from server:', response);
       if (response.status === 201) {
-        // Clear selected options when successfully submitted
-        setSelectedOptions({});
-        // Add the submitted polls to the tracking list
-        setSubmittedPolls(submittedData);
-        console.log('Polls submitted successfully:', submittedData);
+        // Clear selected options for the specific poll when successfully submitted
+        setSelectedOptions({
+          ...selectedOptions,
+          [pollId]: undefined,
+        });
+        // Update the userSubmittedPolls state with the submitted poll ID
+        setUserSubmittedPolls([...userSubmittedPolls, pollId]);
+        console.log('Poll submitted successfully:', submittedData);
       } else {
-        console.error('Failed to submit polls:', response.data);
+        console.error('Failed to submit poll:', response.data);
       }
     } catch (error) {
-      console.error('Error submitting polls:', error);
+      console.error('Error submitting poll:', error);
     }
   };
 
@@ -91,21 +118,22 @@ const PollList = () => {
                   value={option}
                   checked={selectedOptions[poll.id] === index}
                   onChange={() => handleOptionChange(poll.id, index)}
+                  disabled={userSubmittedPolls.includes(poll.id)}
                 />
                 <label htmlFor={`poll_${poll.id}_option_${index}`}>{option}</label>
               </li>
             ))}
           </ul>
-          {/* Add user's selected answer display here */}
           {selectedOptions[poll.id] !== undefined && (
             <p>Your Answer: {poll.options[selectedOptions[poll.id]]}</p>
           )}
-          <Link to={`/poll`}>View Results</Link>
+          <button onClick={() => handleSubmit(poll.id)} disabled={selectedOptions[poll.id] === undefined}>
+            Submit
+          </button>
+          <Link to={`/pollResults/${poll.id}`}>View Results</Link>
         </div>
       ))}
-
-      <button onClick={handleSubmit}>Submit</button>
-    </div>
+    </div>  
   );
 };
 
