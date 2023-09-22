@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { json, useParams } from 'react-router-dom';
 import './pollresults.css'; // Import a CSS file for styling
 
 const PollResults = () => {
@@ -17,10 +17,12 @@ const PollResults = () => {
   useEffect(() => {
     console.log('Fetching poll details...');
     axios
-      .get(`http://localhost:3001/polls/${pollId}`)
+      .get(`http://localhost:5000/users/polls/${pollId}`)
       .then((response) => {
-        console.log('Fetched poll details:', response.data);
+        // console.log('Fetched poll details:', response.data);
         const pollData = response.data;
+        pollData.options=JSON.parse(pollData.options);
+        console.log("polldata",pollData)
       if (pollData && pollData.options) {
         // Parse the options field as JSON
         // pollData.options = JSON.parse(pollData.options);
@@ -34,7 +36,7 @@ const PollResults = () => {
       });
 
     axios
-      .get(`http://localhost:3001/pollResults/${pollId}`)
+      .get(`http://localhost:5000/users/pollResults/${pollId}`)
       .then((response) => {
         console.log('Fetched poll results:', response.data);
         setResults(response.data); // Set the results state
@@ -48,6 +50,7 @@ const PollResults = () => {
     <div className="poll-results-container">
       <h1 className="poll-results-heading">Poll Results</h1>
       <div className="poll-details">
+        {console.log("o",pollDetails)}
         <h2 className="poll-question">{pollDetails.question}</h2>
         <ul className="poll-options-list">
           {pollDetails.options &&

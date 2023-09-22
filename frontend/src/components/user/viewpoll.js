@@ -10,19 +10,19 @@ const PollList = () => {
   const [userSubmittedPolls, setUserSubmittedPolls] = useState([]); // Track submitted polls by the user
 
   const location = useLocation();
-  const user = location.state.user;
-  console.log("userdetails",user)
+  const user = location.state.user.data;
     useEffect(() => {
     // Fetch the list of polls from your server
-    axios.get('http://localhost:3001/polls')
+    axios.get('http://localhost:5000/users/polls')
       .then((response) => {
         console.log('Polls response:', response.data);
         if (Array.isArray(response.data)) {
           const parsedPolls = response.data.map((poll) => ({
-            id: poll.poll_id,
+            id: poll. id,
             question: poll.question,
             options: JSON.parse(poll.options),
           }));
+          console.log("parsedpolls",parsedPolls)
           setPolls(parsedPolls);
           // Initialize selectedOptions state for all polls
           const initialSelectedOptions = {};
@@ -39,7 +39,7 @@ const PollList = () => {
       });
 
     // Fetch the user's submitted polls from the server
-    axios.get(`http://localhost:3001/user/${user.id}/submittedPolls`)
+    axios.get(`http://localhost:5000/users/${user}/submittedPolls`)
       .then((response) => {
         console.log('Submitted polls response:', response.data);
         if (Array.isArray(response.data)) {
@@ -53,7 +53,7 @@ const PollList = () => {
       .catch((error) => {
         console.error('Error fetching submitted polls:', error);
       });
-  }, [user.id]);
+  }, [user]);
 
   const handleOptionChange = (pollId, optionIndex) => {
     // Check if the user has already submitted this poll
@@ -75,7 +75,7 @@ const PollList = () => {
 
     // Create an array to store submitted poll data
     const submittedData = {
-      userId: user.id,
+      userId: user,
       pollId: pollId, // Use the passed pollId
       selectedOptionIndex: selectedOptions[pollId],
     };
@@ -83,7 +83,7 @@ const PollList = () => {
     try {
       // Send a POST request to your server to save the submitted data
       console.log("sybmitting data",submittedData)
-      const response = await axios.post('http://localhost:3001/submitPolls', submittedData);
+      const response = await axios.post('http://localhost:5000/users/submitPolls', submittedData);
       console.log('Response from server:', response);
       if (response.status === 201) {
         // Clear selected options for the specific poll when successfully submitted
@@ -105,8 +105,10 @@ const PollList = () => {
   return (
     <div className="poll-list">
       <h2>Poll List</h2>
+      {console.log("poll",polls)}
       {polls.map((poll) => (
         <div key={poll.id} className="poll">
+          {console.log("poll data",poll)}
           <h3>{poll.question}</h3>
           <ul className="poll-options">
             {poll.options.map((option, index) => (

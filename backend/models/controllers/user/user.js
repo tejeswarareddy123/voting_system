@@ -3,6 +3,8 @@ const db = require("../../Entity")
 const bcrypt=require("bcrypt")
 const jwt = require('jsonwebtoken');
 const secretkey='jman';
+const Sequelize = require('sequelize');
+
 
 
 
@@ -147,7 +149,7 @@ const submitted_polls = async(req,res)=>{
 const submit_poll = async(req,res)=> {
     try {
         const submittedPoll = req.body;
-    
+        console.log("submitted poll",submittedPoll);
         // Ensure submittedPoll is an object
         if (typeof submittedPoll !== 'object') {
           return res.status(400).json({ error: 'Invalid data format' });
@@ -177,16 +179,20 @@ const poll_details=async(req,res)=>{
         const pollData = await poll.findOne({
           where: { poll_id: pollId },
         });
-    
         if (!pollData) {
           res.status(404).json({ error: 'Poll not found' });
           return;
         }
     
         // Parse the options field as JSON
-        pollData.options = JSON.parse(pollData.options);
-    
-        res.status(200).json(pollData);
+        console.log('Options before parsing:', pollData.options);
+        const parseddata={
+            poll_id: pollData.poll_id,
+            question: pollData.question,
+            options: JSON.parse(pollData.options)
+        }
+        console.log("options after parsing",parseddata);
+        res.status(200).json(parseddata);
       } catch (error) {
         console.error('Error fetching poll details:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -198,10 +204,10 @@ const poll_results = async(req,res)=>{
         const pollId = req.params.pollId;
         console.log("pollid",pollId)
         // Query the database to get poll results using Sequelize
-        const pollResults = await submittedPoll.findAll({
+        const pollResults = await SubmittedPoll.findAll({
           attributes: [
             'selected_option_index',
-            [sequelize.fn('COUNT', 'selected_option_index'), 'voteCount'],
+            [Sequelize.fn('COUNT', 'selected_option_index'), 'voteCount'],
           ],
           where: { poll_id: pollId },
           group: 'selected_option_index',

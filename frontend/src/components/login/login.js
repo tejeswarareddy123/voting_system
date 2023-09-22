@@ -35,7 +35,7 @@ function Login() {
         body: JSON.stringify(signupDetails)
       };
 
-      fetch("http://localhost:3001/signin", options)
+      fetch("http://localhost:5000/users/", options)
         .then(async (res) => {
           if (res.status === 201) {
             const user = await res.json();

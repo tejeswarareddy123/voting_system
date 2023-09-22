@@ -31,7 +31,7 @@ const CreatePoll = () => {
     };
 
     axios
-      .post('http://localhost:3001/polls', newPoll)
+      .post('http://localhost:5000/users/polls', newPoll)
       .then((response) => {
         console.log('Poll created:', response.data);
         // Handle any further actions after successful poll creation

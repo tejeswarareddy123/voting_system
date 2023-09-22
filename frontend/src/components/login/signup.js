@@ -42,9 +42,9 @@ const Signup = () => {
         body: JSON.stringify(signupDetails)
       };
 
-      fetch("http://localhost:8000/signup", options)
+      fetch("http://localhost:5000/users/signup", options)
         .then((res) => {
-          if (res.status === 201) {
+          if (res.status === 200) {
             toast.success("Registration Successful");
             navigate('/');
           } else if (res.status === 409) {
