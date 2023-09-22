@@ -48,6 +48,9 @@ const PollResults = () => {
 
   return (
     <div className="poll-results-container">
+      <div className="navbar">
+        <h1>Polling System</h1>
+      </div>
       <h1 className="poll-results-heading">Poll Results</h1>
       <div className="poll-details">
         {console.log("o",pollDetails)}

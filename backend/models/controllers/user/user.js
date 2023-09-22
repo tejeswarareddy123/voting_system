@@ -32,6 +32,7 @@ const login = async (req, res) => {
             const valid_user = await user.findOne({
                 where: {
                     mail: req.body.email,
+                    password:req.body.password
                    
                 }})
                 if (valid_user.isadmin) {

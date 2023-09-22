@@ -37,12 +37,19 @@ function Login() {
 
       fetch("http://localhost:5000/users/", options)
         .then(async (res) => {
-          if (res.status === 201) {
-            const user = await res.json();
+          const data=await res.json()
+          console.log("message",data.message)
+          if (data.message==='User logged') {
+            const user = data;
             console.log(user);
             toast.success("Login Successful");
             navigate("/pollList", { state: { user } });
-          } else if (res.status === 404) {
+          } 
+          else if(data.message==='Admin logged'){
+            toast.success("Admin Login Successful");
+            navigate("/createpoll");
+          }
+          else{
             toast.warning("Invalid Username or Password");
           }
         })
