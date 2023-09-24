@@ -120,7 +120,8 @@ const polls_data=async(req,res)=>{
             question: poll.question,
             options: JSON.parse(poll.options), // Parse the "options" column
         }));
-        res.status(200).json(formattedPolls);
+        console.log(formattedPolls);
+        res.status(200).json({message:"polls fetched",formattedPolls});
       } catch (error) {
         console.error('Error fetching polls:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -151,6 +152,7 @@ const submit_poll = async(req,res)=> {
     try {
         const submittedPoll = req.body;
         console.log("submitted poll",submittedPoll);
+        console.log("option index",submittedPoll.selectedOption);
         // Ensure submittedPoll is an object
         if (typeof submittedPoll !== 'object') {
           return res.status(400).json({ error: 'Invalid data format' });
@@ -160,7 +162,7 @@ const submit_poll = async(req,res)=> {
         await SubmittedPoll.create({
           user_id: submittedPoll.userId,
           poll_id: submittedPoll.pollId,
-          selected_option_index: submittedPoll.selectedOptionIndex,
+          selected_option_index: submittedPoll.selectedOption,
         });
     
         // Send a success response

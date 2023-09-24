@@ -1,0 +1,57 @@
+/* answerpoll.css */
+.answer-poll-container {
+    text-align: left;
+    max-width: 600px;
+    margin: 20px; 
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .question {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .options {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .option {
+    margin-bottom: 10px;
+  }
+  
+  .radio-label {
+    display: flex;
+    align-items: center; 
+  }
+  
+  .radio-input {
+    margin-right: 10px; 
+  }
+  
+  .submit-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    width: 100px;
+  }
+  
+  .submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .submission-message {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  

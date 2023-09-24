@@ -1,0 +1,65 @@
+/* adminhome.css */
+
+.admin-container {
+  display: flex;
+}
+
+.sidebar {
+  text-align: left;
+  width: 100%;
+  background-color: #19105B;
+  color: white;
+  padding: 20px;
+  position: relative; /* Add this line */
+}
+
+.sidebar h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.create-poll-button {
+  position: absolute;
+  top: 20px; /* Adjust the top value to your preference */
+  right: 80px; /* Adjust the right value to your preference */
+  background-color: #0073e6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-right: 100px;
+}
+
+.create-poll-button:hover {
+  background-color: #005bab;
+}
+
+.logout-button {
+  position: absolute;
+  top: 20px; /* Adjust the top value to your preference */
+  right: 20px; /* Adjust the right value to your preference */
+  background-color: #ff0000a6; /* Change this to your desired logout button style */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-right: 30px;
+}
+
+.logout-button:hover {
+  background-color: #cc0000; /* Change this to the hover color you prefer */
+}
+
+.polling {
+  flex: 1;
+  padding: 20px;
+}
+
+.polling h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}

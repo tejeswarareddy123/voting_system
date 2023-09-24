@@ -1,0 +1,60 @@
+/* viewpoll.css */
+
+.poll-container {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .poll-heading {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  .poll-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .poll-table th, .poll-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-size: 16px;
+  }
+  
+  .poll-table th {
+    background-color: #19105B;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .poll-table td {
+    background-color: #fff;
+    color: #333;
+    transition: background-color 0.3s ease;
+  }
+  
+  .poll-table tr:nth-child(even) td {
+    background-color: #f2f2f2;
+  }
+  
+  .view-result-button {
+    background-color: #19105B;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .view-result-button:hover {
+    background-color: #005bab;
+  }
+  
+  /* Add more styles as needed */
+  

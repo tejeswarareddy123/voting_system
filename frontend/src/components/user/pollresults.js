@@ -3,12 +3,10 @@ import axios from 'axios';
 import { json, useParams } from 'react-router-dom';
 import './pollresults.css'; // Import a CSS file for styling
 
-const PollResults = () => {
+const PollResults = ({ pollId }) => {
   const [pollDetails, setPollDetails] = useState({});
   const [results, setResults] = useState([]);
-  const { pollId } = useParams();
-  console.log(pollId)
-  
+
   const getVoteCountForOption = (optionIndex) => {
     const result = results.find((item) => item.selected_option_index === optionIndex);
     return result ? result.voteCount : 0;
@@ -21,16 +19,16 @@ const PollResults = () => {
       .then((response) => {
         // console.log('Fetched poll details:', response.data);
         const pollData = response.data;
-        pollData.options=JSON.parse(pollData.options);
-        console.log("polldata",pollData)
-      if (pollData && pollData.options) {
-        // Parse the options field as JSON
-        // pollData.options = JSON.parse(pollData.options);
-        setPollDetails(pollData); // Set the poll details state
-      } else {
-        console.error('Invalid poll data format:', pollData);
-      }
-    })
+        pollData.options = JSON.parse(pollData.options);
+        console.log("polldata", pollData)
+        if (pollData && pollData.options) {
+          // Parse the options field as JSON
+          // pollData.options = JSON.parse(pollData.options);
+          setPollDetails(pollData); // Set the poll details state
+        } else {
+          console.error('Invalid poll data format:', pollData);
+        }
+      })
       .catch((error) => {
         console.error('Error fetching poll details:', error);
       });
@@ -48,12 +46,9 @@ const PollResults = () => {
 
   return (
     <div className="poll-results-container">
-      <div className="navbar">
-        <h1>Polling System</h1>
-      </div>
       <h1 className="poll-results-heading">Poll Results</h1>
       <div className="poll-details">
-        {console.log("o",pollDetails)}
+        {console.log("o", pollDetails)}
         <h2 className="poll-question">{pollDetails.question}</h2>
         <ul className="poll-options-list">
           {pollDetails.options &&

@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import './createpoll.css'; // Import your custom CSS file
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const CreatePoll = () => {
   const [question, setQuestion] = useState('');
@@ -33,12 +35,14 @@ const CreatePoll = () => {
     axios
       .post('http://localhost:5000/users/polls', newPoll)
       .then((response) => {
-        console.log('Poll created:', response.data);
-        // Handle any further actions after successful poll creation
+        if(response.data.message==='Poll created successfully'){
+          toast.success("poll created successfully");
+          setQuestion('');
+          setOptions(['']);
+        }
       })
       .catch((error) => {
-        console.error('Error creating poll:', error);
-        // Handle error cases
+        toast.error('Error creating poll:');
       });
   };
 

@@ -43,11 +43,11 @@ function Login() {
             const user = data;
             console.log(user);
             toast.success("Login Successful");
-            navigate("/pollList", { state: { user } });
+            navigate("/userhome", { state: { user } });
           } 
           else if(data.message==='Admin logged'){
             toast.success("Admin Login Successful");
-            navigate("/createpoll");
+            navigate("/adminhome");
           }
           else{
             toast.warning("Invalid Username or Password");
