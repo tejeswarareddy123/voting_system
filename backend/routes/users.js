@@ -1,20 +1,23 @@
 var express = require('express');
 var router = express.Router();
 var User = require("../models/controllers/user/user");
-// var Admin = require("../models/controllers/admin/admin");
+var Admin = require("../models/controllers/admin/admin");
 
+//admin routes
+
+router.post("/polls",Admin.create_poll);
+router.get("/polls",Admin.polls_data)
+router.get("/pollResults/:pollId",Admin.poll_results);
 
 
 
 ///Use routes
 router.post("/",User.login);
 router.post("/signup",User.create_user);
-router.post("/polls",User.create_poll);
-router.get("/polls",User.polls_data)
 router.get("/:userId/submittedPolls",User.submitted_polls)
 router.post("/submitPolls",User.submit_poll)
 router.get("/polls/:pollId",User.poll_details);
-router.get("/pollResults/:pollId",User.poll_results);
+
 
 
  

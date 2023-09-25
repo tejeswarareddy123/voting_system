@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import './signup.css';
 import { useNavigate } from 'react-router-dom';
 import Loginservice from '../../services/login/loginservice';
+import poll from '../../assets/poll.jpg'
 
 function Signup() {
   const [signupDetails, setSignUpDetails] = useState({
@@ -59,6 +60,7 @@ function Signup() {
 
   return (
     <div className="signup-container">
+      <img src={poll} alt='poll'></img>
       <form className="signup-form" onSubmit={userRegistrationHandler}>
         <p className="title">Registration</p>
         <label htmlFor="name">Enter your Name</label>

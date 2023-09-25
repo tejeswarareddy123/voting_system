@@ -8,10 +8,7 @@
   }
   
   .signup-form {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-left: 100px;
     padding: 30px;
     width: 360px;
     text-align: center;
@@ -71,6 +68,10 @@
   .login-link{
     margin-top: -35px;
     margin-right: -30px;
+  }
+  img{
+    height: 500px;
+    width: 800px;
   }
   
   

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import './login.css';
 import { useNavigate } from 'react-router-dom';
 import LoginService from '../../services/login/loginservice';
+import poll from '../../assets/poll.jpg'
 
 function Login() {
   const [loginDetails, setLoginDetails] = useState({
@@ -48,6 +49,7 @@ function Login() {
 
   return (
     <div className="login-container">
+      <img src={poll} alt='poll image'></img>
       <form className="login-form" onSubmit={userLoginHandler}>
         <p className="title">Login</p>
         <label htmlFor="email">Email</label>
