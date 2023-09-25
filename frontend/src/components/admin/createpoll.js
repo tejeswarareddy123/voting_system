@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import './createpoll.css'; // Import your custom CSS file
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import Adminapiservice from '../../services/admin/adminservice';
 
 
 const CreatePoll = () => {
@@ -26,24 +27,26 @@ const CreatePoll = () => {
     setOptions(newOptions);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     const newPoll = {
       question,
       options,
     };
 
-    axios
-      .post('http://localhost:5000/users/polls', newPoll)
-      .then((response) => {
+      try{
+
+        const response=await Adminapiservice.createPoll(newPoll);
+        console.log("admin component",response)
         if(response.data.message==='Poll created successfully'){
           toast.success("poll created successfully");
           setQuestion('');
           setOptions(['']);
         }
-      })
-      .catch((error) => {
+      }
+      catch(error) {
+        console.log("error creating poll",error);
         toast.error('Error creating poll:');
-      });
+      };
   };
 
   return (

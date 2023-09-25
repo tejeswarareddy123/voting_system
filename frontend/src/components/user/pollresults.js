@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { json, useParams } from 'react-router-dom';
-import './pollresults.css'; // Import a CSS file for styling
+import './pollresults.css';
+import Adminapiservice from '../../services/admin/adminservice';
 
 const PollResults = ({ pollId }) => {
   const [pollDetails, setPollDetails] = useState({});
@@ -13,34 +13,20 @@ const PollResults = ({ pollId }) => {
   };
 
   useEffect(() => {
-    console.log('Fetching poll details...');
-    axios
-      .get(`http://localhost:5000/users/polls/${pollId}`)
-      .then((response) => {
-        // console.log('Fetched poll details:', response.data);
-        const pollData = response.data;
-        pollData.options = JSON.parse(pollData.options);
-        console.log("polldata", pollData)
-        if (pollData && pollData.options) {
-          // Parse the options field as JSON
-          // pollData.options = JSON.parse(pollData.options);
-          setPollDetails(pollData); // Set the poll details state
-        } else {
-          console.error('Invalid poll data format:', pollData);
-        }
+    Adminapiservice.fetchPollDetailsbyId(pollId)
+      .then((pollData) => {
+        setPollDetails(pollData);
       })
       .catch((error) => {
-        console.error('Error fetching poll details:', error);
+        console.log("error fetching polls", error);
       });
 
-    axios
-      .get(`http://localhost:5000/users/pollResults/${pollId}`)
-      .then((response) => {
-        console.log('Fetched poll results:', response.data);
-        setResults(response.data); // Set the results state
+    Adminapiservice.fetchPollResults(pollId)
+      .then((pollResults) => {
+        setResults(pollResults);
       })
       .catch((error) => {
-        console.error('Error fetching poll results:', error);
+        console.log("error fetching polls", error);
       });
   }, [pollId]);
 

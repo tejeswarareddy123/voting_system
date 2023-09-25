@@ -56,5 +56,13 @@
     background-color: #005bab;
   }
   
-  /* Add more styles as needed */
+  .back-to-polls{
+    background-color: #19105B;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
   

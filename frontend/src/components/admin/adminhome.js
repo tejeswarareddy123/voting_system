@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CreatePoll from "../user/createpoll";
+import CreatePoll from "./createpoll";
 import Viewpoll from "./viewpoll";
 import './adminhome.css';
 import { useNavigate } from "react-router-dom";

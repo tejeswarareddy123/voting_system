@@ -3,46 +3,36 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import './viewpoll.css'; // Import your custom CSS file for styling
 import Answerpoll from "./answerpoll";
+import Adminapiservice from "../../services/admin/adminservice";
+import UserService from "../../services/user/userservice";
 
-function PollList({ user }) {
+function PollList() {
   const [polls, setPolls] = useState([]);
   const [answerpoll, setanswerpoll] = useState(false); // State for showing/hiding results
   const [selectedPollId, setSelectedPollId] = useState(null); // State to store selected poll id
   const [showpolls, setshowpolls] = useState(false);
   const [userSubmittedPolls, setUserSubmittedPolls] = useState([]);
-  const [showpoll,setshowpoll]=useState(false);
+  const [showpoll, setshowpoll] = useState(false);
+  const user = localStorage.getItem("user");
 
   useEffect(() => {
-    axios
-      .get('http://localhost:5000/users/polls')
-      .then((response) => {
-        if (Array.isArray(response.data.formattedPolls)) {
-          const parsedPolls = response.data.formattedPolls.map((poll) => ({
-            id: poll.id,
-            question: poll.question,
-            options: JSON.parse(poll.options),
-          }));
-          setPolls(parsedPolls);
-        } else {
-          console.error('Invalid poll data format:', response.data);
-        }
+    // Fetch polls using the service function
+    Adminapiservice.fetchPolls()
+      .then((parsedPolls) => {
+        setPolls(parsedPolls);
+      })
+      .catch((error) => {
+        console.error('Error fetching polls:', error);
       });
 
-    axios.get(`http://localhost:5000/users/${user}/submittedPolls`)
-      .then((response) => {
-        if (Array.isArray(response.data)) {
-          // Update the userSubmittedPolls state with the submitted poll IDs
-          const submittedPollIds = response.data.map((submittedPoll) => submittedPoll.poll_id);
-          setUserSubmittedPolls(submittedPollIds);
-        } else {
-          console.error('Invalid submitted poll data format:', response.data);
-        }
+    // Fetch submitted polls using the service function
+    UserService.fetchSubmittedPolls(user)
+      .then((submittedPollIds) => {
+        setUserSubmittedPolls(submittedPollIds);
       })
       .catch((error) => {
         console.error('Error fetching submitted polls:', error);
       });
-
-
   }, [user]);
 
   const handleViewResult = (pollId) => {
@@ -61,7 +51,9 @@ function PollList({ user }) {
     <div className="poll-container">
       {answerpoll && !showpolls ? (
         <div>
-          <Answerpoll pollId={selectedPollId} showpoll={showpoll} user={user} />
+          <Answerpoll pollId={selectedPollId} showpoll={showpoll} updateUserSubmittedPolls={(pollId) => {
+            setUserSubmittedPolls([...userSubmittedPolls, pollId]);
+          }} />
           <button className="back-polls" onClick={handleclose}>Back to polls</button>
         </div>
       ) : (

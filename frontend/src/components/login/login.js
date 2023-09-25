@@ -1,75 +1,61 @@
-import { useState } from "react";
+import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { Link } from "react-router-dom";
-import "./login.css";
-import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import './login.css';
+import { useNavigate } from 'react-router-dom';
+import LoginService from '../../services/login/loginservice';
 
 function Login() {
-  const [signupDetails, setSignUpDetails] = useState({
-    email: "",
-    password: ""
+  const [loginDetails, setLoginDetails] = useState({
+    email: '',
+    password: '',
   });
 
   const navigate = useNavigate();
 
-  const userDetailsInputHandler = (e) => {
-    setSignUpDetails({ ...signupDetails, [e.target.id]: e.target.value });
+  const loginDetailsInputHandler = (e) => {
+    setLoginDetails({ ...loginDetails, [e.target.id]: e.target.value });
   };
 
-  const userRegistrationHandler = async (e) => {
+  const userLoginHandler = async (e) => {
     e.preventDefault();
-    const { email, password } = signupDetails || {};
+    const { email, password } = loginDetails || {};
 
     if (email === undefined || email.length < 1) {
-      toast.error("email is required");
+      toast.error('Email is required');
     } else if (password === undefined || password.length < 1) {
-      toast.error("Password is required");
+      toast.error('Password is required');
     } else {
-      console.log(signupDetails);
-      const options = {
-        method: "post",
-        headers: {
-          'Content-Type': "application/json",
-          'accept': 'application/json'
-        },
-        body: JSON.stringify(signupDetails)
-      };
-
-      fetch("http://localhost:5000/users/", options)
-        .then(async (res) => {
-          const data=await res.json()
-          console.log("message",data.message)
-          if (data.message==='User logged') {
-            const user = data;
-            console.log(user);
-            toast.success("Login Successful");
-            navigate("/userhome", { state: { user } });
-          } 
-          else if(data.message==='Admin logged'){
-            toast.success("Admin Login Successful");
-            navigate("/adminhome");
-          }
-          else{
-            toast.warning("Invalid Username or Password");
-          }
-        })
-        .catch((error) => {
-          console.error("Fetch error:", error);
-          toast.error("An error occurred during registration.");
-        });
+      try {
+        const response = await LoginService.loginUser(email, password);
+        console.log(response);
+        if (response.message === 'User logged') {
+          toast.success('Login Successful');
+          localStorage.setItem('user', response.data);
+          navigate('/userhome');
+        } else if (response.message === 'Admin logged') {
+          toast.success('Admin Login Successful');
+          navigate('/adminhome');
+        } else {
+          toast.error('Invalid Username or Password');
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+        toast.error('An error occurred during login.');
+      }
     }
   };
 
   return (
     <div className="login-container">
-      <form className="login-form" onSubmit={userRegistrationHandler}>
+      <form className="login-form" onSubmit={userLoginHandler}>
         <p className="title">Login</p>
         <label htmlFor="email">Email</label>
         <input
           type="email"
           id="email"
           placeholder="Enter your email"
-          onChange={userDetailsInputHandler}
+          onChange={loginDetailsInputHandler}
         />
 
         <label htmlFor="password">Password</label>
@@ -77,15 +63,13 @@ function Login() {
           type="password"
           id="password"
           placeholder="Enter your password"
-          onChange={userDetailsInputHandler}
+          onChange={loginDetailsInputHandler}
         />
 
-        <button type="submit">
-          Login
-        </button>
+        <button type="submit">Login</button>
 
         <p>
-          Don't have an account?{" "}
+          Don't have an account?{' '}
           <Link to="/signup" className="signup-link">
             Signup
           </Link>

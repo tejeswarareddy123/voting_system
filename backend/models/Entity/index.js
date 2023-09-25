@@ -1,6 +1,4 @@
-// const dotenv=require('dotenv')
-// dotenv.config({path:"./config.env"})
-// console.log(process.env.USER)
+
 const { Sequelize, DataTypes } = require("sequelize");
 const db_config = require("../../config/db-config.js")
 const sql = require("mysql2/promise")
@@ -18,7 +16,6 @@ const sequelize= new Sequelize(
     db_config.PASSWORD,{
         host:db_config.HOST,
         dialect:db_config.DIALECT,
-        // timezone: '+05:30'
     }
 ) 
 

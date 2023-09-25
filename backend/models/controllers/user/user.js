@@ -16,12 +16,11 @@ const SubmittedPoll=db.SUBMITTED_POLL
 
 ///login
 const login = async (req, res) => {
-    console.log(req.body)
     const { email, password } = req.body
     const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;
     const isValid = /@jmangroup\.com$/.test(email);
     if (!isValid) {
-        res.send("invaild mail")
+        res.send("invalid mail")
     }
     else if (!passwordRegex.test(password)){
         res.send("Passoword is weak")
@@ -35,10 +34,11 @@ const login = async (req, res) => {
                     password:req.body.password
                    
                 }})
-                if (valid_user.isadmin) {
+                console.log("valid",valid_user)
+                if (valid_user.isadmin && isValid)  {
                     res.send({data:valid_user.id,message:"Admin logged"})
                 }
-                else if (!valid_user.isadmin)  {
+                else if (!valid_user.isadmin && isValid)  {
                     console.log("user Login success");
                     // res.send({data:valid_user.id,message:"User logged"})
                     res.status(201).json({data:valid_user.id,message:"User logged"});
@@ -48,6 +48,7 @@ const login = async (req, res) => {
                 }
             
         } catch (error) {
+            console.log("user not exisrt");
             res.send("user not exist")
         }
     }
@@ -66,11 +67,11 @@ const create_user = async (req, res) => {
             var { name, email, password } = req.body
             if(!passwordRegex.test(password))
             {
-                res.send("Passoword is weak")
+              res.send({ statusCode: 202, message: 'password is weak' })
             }
             else if(!isValid.test(email))
             {
-                res.send("not an organisation mail")
+              res.send({ statusCode: 201, message: 'not an organization mail' })
             }
             
             else{
@@ -165,7 +166,7 @@ const submit_poll = async(req,res)=> {
           selected_option_index: submittedPoll.selectedOption,
         });
     
-        // Send a success response
+        
         res.status(201).json({ message: 'Poll submitted successfully' });
       } catch (error) {
         console.error('Error inserting submitted poll data:', error);

@@ -3,29 +3,21 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import './viewpoll.css'; // Import your custom CSS file for styling
 import PollResults from "../user/pollresults";
+import Adminapiservice from '../../services/admin/adminservice';
 
 function Viewpoll() {
   const [polls, setPolls] = useState([]);
   const [showResults, setShowResults] = useState(false); // State for showing/hiding results
   const [selectedPollId, setSelectedPollId] = useState(null); // State to store selected poll id
-  const [showpolls,setshowpolls]=useState(false);
+  const [showpolls, setshowpolls] = useState(false);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:5000/users/polls')
-      .then((response) => {
-        console.log('Polls response:', response.data);
-        if (Array.isArray(response.data.formattedPolls)) {
-          const parsedPolls = response.data.formattedPolls.map((poll) => ({
-            id: poll.id,
-            question: poll.question,
-            options: JSON.parse(poll.options),
-          }));
-          console.log("parsedpolls", parsedPolls);
-          setPolls(parsedPolls);
-        } else {
-          console.error('Invalid poll data format:', response.data);
-        }
+    Adminapiservice.fetchPolls()
+      .then((parsedPolls) => {
+        setPolls(parsedPolls);
+      })
+      .catch((error) => {
+        console.log("error fetching polls", error);
       });
   }, []);
 
@@ -34,8 +26,8 @@ function Viewpoll() {
     setSelectedPollId(pollId);
     setShowResults(true);
   };
-  
-  const handleclose=()=>{
+
+  const handleclose = () => {
     setShowResults(false);
   }
 
@@ -43,8 +35,8 @@ function Viewpoll() {
     <div className="poll-container">
       {showResults && !showpolls ? (
         <div>
-        <PollResults pollId={selectedPollId} />
-        <button onClick={handleclose}>Back to polls</button>
+          <PollResults pollId={selectedPollId} />
+          <button onClick={handleclose} className="back-to-polls">Back to polls</button>
         </div>
       ) : (
         <div>

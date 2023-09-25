@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import CreatePoll from './components/user/createpoll';
+import CreatePoll from './components/admin/createpoll';
 import PollList from './components/user/viewpoll'
 import Login from './components/login/login';
 import { BrowserRouter as Router,Routes, Route } from "react-router-dom";
