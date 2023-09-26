@@ -1,16 +1,16 @@
 import axios from "axios";
 
-const apiBaseUrl = 'http://localhost:5000/users'; // Set your API base URL here
+const apiBaseUrl = 'http://localhost:5000/users'; 
 
 const Adminapiservice = {
     createPoll: async (newPoll) => {
         try {
-            const response = await axios.post(`${apiBaseUrl}/polls`, newPoll); // Use axios for the POST request
+            const response = await axios.post(`${apiBaseUrl}/polls`, newPoll); 
             console.log("admin service", response);
             return response;
         } catch (error) {
             console.log("error creating poll", error);
-            throw error; // You can rethrow the error to handle it elsewhere if needed
+            throw error; 
         }
     },
 

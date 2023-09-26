@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "./answerpoll.css";
 import { toast } from 'react-toastify';
 import UserService from "../../services/user/userservice";
@@ -13,7 +12,7 @@ function Answerpoll({ pollId, showpoll, updateUserSubmittedPolls }) {
 
   useEffect(() => {
     if (showpoll) {
-      UserService.fetchPollDetailsbyId(pollId) // Use PollService to fetch poll details
+      UserService.fetchPollDetailsbyId(pollId) 
         .then((pollData) => {
           setPollDetails(pollData);
           setPollOptions(pollData.options);

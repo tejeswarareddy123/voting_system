@@ -1,8 +1,7 @@
 // src/CreatePoll.js
 
 import React, { useState } from 'react';
-import './createpoll.css'; // Import your custom CSS file
-import axios from 'axios';
+import './createpoll.css'; 
 import { ToastContainer, toast } from 'react-toastify';
 import Adminapiservice from '../../services/admin/adminservice';
 

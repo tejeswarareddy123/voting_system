@@ -11,7 +11,7 @@ router.get("/pollResults/:pollId",Admin.poll_results);
 
 
 
-///Use routes
+///User routes
 router.post("/",User.login);
 router.post("/signup",User.create_user);
 router.get("/:userId/submittedPolls",User.submitted_polls)

@@ -1,14 +1,13 @@
-// Viewpoll.js
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
-import './viewpoll.css'; // Import your custom CSS file for styling
+import './viewpoll.css'; 
 import PollResults from "../user/pollresults";
 import Adminapiservice from '../../services/admin/adminservice';
 
 function Viewpoll() {
   const [polls, setPolls] = useState([]);
-  const [showResults, setShowResults] = useState(false); // State for showing/hiding results
-  const [selectedPollId, setSelectedPollId] = useState(null); // State to store selected poll id
+  const [showResults, setShowResults] = useState(false);
+  const [selectedPollId, setSelectedPollId] = useState(null); 
   const [showpolls, setshowpolls] = useState(false);
 
   useEffect(() => {
@@ -22,7 +21,6 @@ function Viewpoll() {
   }, []);
 
   const handleViewResult = (pollId) => {
-    // Set the selected poll id and showResults to true
     setSelectedPollId(pollId);
     setShowResults(true);
   };
@@ -55,7 +53,7 @@ function Viewpoll() {
                   <td>
                     <button
                       className="view-result-button"
-                      onClick={() => handleViewResult(poll.id)} // Pass poll.id to handleViewResult
+                      onClick={() => handleViewResult(poll.id)} 
                     >
                       View Result
                     </button>

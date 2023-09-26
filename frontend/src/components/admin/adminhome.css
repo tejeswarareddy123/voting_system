@@ -1,4 +1,4 @@
-/* adminhome.css */
+
 
 .admin-container {
   display: flex;
@@ -10,7 +10,7 @@
   background-color: #19105B;
   color: white;
   padding: 20px;
-  position: relative; /* Add this line */
+  position: relative; 
 }
 
 .sidebar h1 {
@@ -20,8 +20,8 @@
 
 .create-poll-button {
   position: absolute;
-  top: 20px; /* Adjust the top value to your preference */
-  right: 80px; /* Adjust the right value to your preference */
+  top: 20px; 
+  right: 80px; 
   background-color: #0073e6;
   color: white;
   border: none;
@@ -38,9 +38,9 @@
 
 .logout-button {
   position: absolute;
-  top: 20px; /* Adjust the top value to your preference */
-  right: 20px; /* Adjust the right value to your preference */
-  background-color: #ff0000a6; /* Change this to your desired logout button style */
+  top: 20px; 
+  right: 20px; 
+  background-color: #ff0000a6; 
   color: white;
   border: none;
   padding: 10px 20px;
@@ -51,7 +51,7 @@
 }
 
 .logout-button:hover {
-  background-color: #cc0000; /* Change this to the hover color you prefer */
+  background-color: #cc0000; 
 }
 
 .polling {

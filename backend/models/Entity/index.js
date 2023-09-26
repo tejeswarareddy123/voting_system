@@ -24,8 +24,6 @@ db.sequelize=sequelize
 db.USER=require("./user/user_table.js")(sequelize,DataTypes)
 db.POLL=require("./user/poll_table.js")(sequelize,DataTypes)
 db.SUBMITTED_POLL=require("./user/submittedpoll_table.js")(sequelize,DataTypes)
-// db.ADMIN_TRAINING=require("./admin/Schedule_training.js")(sequelize,DataTypes)
-// db.TRAININGS=require("./trainings/registered_user_table.js")(sequelize,DataTypes)
 
 
 db.sequelize.sync({ force: false }, () => {

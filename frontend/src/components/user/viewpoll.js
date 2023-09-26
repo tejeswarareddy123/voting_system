@@ -1,22 +1,20 @@
-// Viewpoll.js
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
-import './viewpoll.css'; // Import your custom CSS file for styling
+import './viewpoll.css'; 
 import Answerpoll from "./answerpoll";
 import Adminapiservice from "../../services/admin/adminservice";
 import UserService from "../../services/user/userservice";
 
 function PollList() {
   const [polls, setPolls] = useState([]);
-  const [answerpoll, setanswerpoll] = useState(false); // State for showing/hiding results
-  const [selectedPollId, setSelectedPollId] = useState(null); // State to store selected poll id
+  const [answerpoll, setanswerpoll] = useState(false); 
+  const [selectedPollId, setSelectedPollId] = useState(null); 
   const [showpolls, setshowpolls] = useState(false);
   const [userSubmittedPolls, setUserSubmittedPolls] = useState([]);
   const [showpoll, setshowpoll] = useState(false);
   const user = localStorage.getItem("user");
 
   useEffect(() => {
-    // Fetch polls using the service function
     Adminapiservice.fetchPolls()
       .then((parsedPolls) => {
         setPolls(parsedPolls);
@@ -25,7 +23,6 @@ function PollList() {
         console.error('Error fetching polls:', error);
       });
 
-    // Fetch submitted polls using the service function
     UserService.fetchSubmittedPolls(user)
       .then((submittedPollIds) => {
         setUserSubmittedPolls(submittedPollIds);
@@ -36,7 +33,6 @@ function PollList() {
   }, [user]);
 
   const handleViewResult = (pollId) => {
-    // Set the selected poll id and showResults to true
     setSelectedPollId(pollId);
     setanswerpoll(true);
     setshowpoll(true);

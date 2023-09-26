@@ -1,12 +1,13 @@
 const db = require("../../Entity")
 const poll = db.POLL
+const SubmittedPoll = db.SUBMITTED_POLL
+const Sequelize = require('sequelize');
 
 const create_poll = async (req, res) => {
     try {
       const { question, options } = req.body;
       console.log("question", question)
       console.log("options", options);
-      // Create a new poll record in the database using the Sequelize model
       const newPoll = await poll.create({
         question,
         options: JSON.stringify(options),
@@ -22,12 +23,11 @@ const create_poll = async (req, res) => {
 
   const polls_data = async (req, res) => {
     try {
-      // Use Sequelize's findAll() method to retrieve all polls
       const polls = await poll.findAll();
       const formattedPolls = polls.map((poll) => ({
         id: poll.poll_id,
         question: poll.question,
-        options: JSON.parse(poll.options), // Parse the "options" column
+        options: JSON.parse(poll.options), 
       }));
       console.log(formattedPolls);
       res.status(200).json({ message: "polls fetched", formattedPolls });
@@ -42,7 +42,6 @@ const poll_results = async (req, res) => {
     try {
       const pollId = req.params.pollId;
       console.log("pollid", pollId)
-      // Query the database to get poll results using Sequelize
       const pollResults = await SubmittedPoll.findAll({
         attributes: [
           'selected_option_index',
@@ -51,6 +50,7 @@ const poll_results = async (req, res) => {
         where: { poll_id: pollId },
         group: 'selected_option_index',
       });
+      console.log();
   
       res.status(200).json(pollResults);
     } catch (error) {

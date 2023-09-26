@@ -39,7 +39,6 @@ const login = async (req, res) => {
       }
       else if (!valid_user.isadmin && isValid) {
         console.log("user Login success");
-        // res.send({data:valid_user.id,message:"User logged"})
         res.status(201).json({ data: valid_user.id, message: "User logged" });
       }
       else {
@@ -95,8 +94,6 @@ const create_user = async (req, res) => {
 const submitted_polls = async (req, res) => {
   try {
     const userId = req.params.userId;
-
-    // Use Sequelize's findAll() method to retrieve submitted polls for the specified user
     const submittedPolls = await SubmittedPoll.findAll({
       attributes: ['poll_id', 'selected_option_index'],
       where: {
@@ -104,7 +101,6 @@ const submitted_polls = async (req, res) => {
       },
     });
 
-    // Send the retrieved submitted polls as JSON response
     res.status(200).json(submittedPolls);
   } catch (error) {
     console.error('Error fetching submitted polls:', error);
@@ -117,12 +113,10 @@ const submit_poll = async (req, res) => {
     const submittedPoll = req.body;
     console.log("submitted poll", submittedPoll);
     console.log("option index", submittedPoll.selectedOption);
-    // Ensure submittedPoll is an object
     if (typeof submittedPoll !== 'object') {
       return res.status(400).json({ error: 'Invalid data format' });
     }
 
-    // Use Sequelize's create() method to insert submitted poll data into the database
     await SubmittedPoll.create({
       user_id: submittedPoll.userId,
       poll_id: submittedPoll.pollId,
@@ -142,7 +136,6 @@ const poll_details = async (req, res) => {
     console.log("request", req);
     const pollId = req.params.pollId;
 
-    // Query the database to retrieve a specific poll by pollId using Sequelize
     const pollData = await poll.findOne({
       where: { poll_id: pollId },
     });
@@ -151,14 +144,11 @@ const poll_details = async (req, res) => {
       return;
     }
 
-    // Parse the options field as JSON
-    console.log('Options before parsing:', pollData.options);
     const parseddata = {
       poll_id: pollData.poll_id,
       question: pollData.question,
       options: JSON.parse(pollData.options)
     }
-    console.log("options after parsing", parseddata);
     res.status(200).json(parseddata);
   } catch (error) {
     console.error('Error fetching poll details:', error);
